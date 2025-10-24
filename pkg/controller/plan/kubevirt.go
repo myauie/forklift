@@ -1981,7 +1981,7 @@ func (r *KubeVirt) getVirtV2vPod(vm *plan.VMStatus, vmVolumes []cnv.Volume, vddk
 	}
 
 	user := qemuUser
-	nonRoot := true
+	nonRoot := false
 	allowPrivilageEscalation := true
 	privileged := true
 	// virt-v2v image
