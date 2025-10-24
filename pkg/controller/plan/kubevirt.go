@@ -108,7 +108,7 @@ const (
 // User
 const (
 	// Qemu user
-	qemuUser = int64(107)
+	qemuUser = int64(0)
 	// Qemu group
 	qemuGroup = int64(107)
 )
@@ -1980,11 +1980,10 @@ func (r *KubeVirt) getVirtV2vPod(vm *plan.VMStatus, vmVolumes []cnv.Volume, vddk
 		return
 	}
 
-	// qemu group
-	fsGroup := qemuGroup
 	user := qemuUser
 	nonRoot := true
-	allowPrivilageEscalation := false
+	allowPrivilageEscalation := true
+	privileged := true
 	// virt-v2v image
 	useV2vForTransfer, vErr := r.Context.Plan.ShouldUseV2vForTransfer()
 	if vErr != nil {
@@ -2039,6 +2038,7 @@ func (r *KubeVirt) getVirtV2vPod(vm *plan.VMStatus, vmVolumes []cnv.Volume, vddk
 			},
 			SecurityContext: &core.SecurityContext{
 				AllowPrivilegeEscalation: &allowPrivilageEscalation,
+				Privileged:               &privileged,
 				Capabilities: &core.Capabilities{
 					Drop: []core.Capability{"ALL"},
 				},
@@ -2161,7 +2161,6 @@ func (r *KubeVirt) getVirtV2vPod(vm *plan.VMStatus, vmVolumes []cnv.Volume, vddk
 		},
 		Spec: core.PodSpec{
 			SecurityContext: &core.PodSecurityContext{
-				FSGroup:        &fsGroup,
 				RunAsUser:      &user,
 				RunAsNonRoot:   &nonRoot,
 				SeccompProfile: &seccompProfile,
@@ -2207,8 +2206,9 @@ func (r *KubeVirt) getVirtV2vPod(vm *plan.VMStatus, vmVolumes []cnv.Volume, vddk
 					},
 					SecurityContext: &core.SecurityContext{
 						AllowPrivilegeEscalation: &allowPrivilageEscalation,
+						Privileged:               &privileged,
 						Capabilities: &core.Capabilities{
-							Drop: []core.Capability{"ALL"},
+							Drop: []core.Capability{"NET_RAW", "MKNOD"},
 						},
 					},
 				},
