@@ -275,6 +275,14 @@ func (r *Builder) PodEnvironment(vmRef ref.Ref, sourceSecret *core.Secret) (env 
 	env = append(
 		env,
 		core.EnvVar{
+			Name:  "LIBGUESTFS_BACKEND",
+			Value: "direct",
+		},
+		core.EnvVar{
+			Name:  "LIBGUESTFS_BACKEND_SETTINGS",
+			Value: "force_tcg",
+		},
+		core.EnvVar{
 			Name:  "V2V_vmName",
 			Value: vm.Name,
 		},
