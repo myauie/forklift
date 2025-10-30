@@ -1632,7 +1632,7 @@ func createVddkCheckJob(plan *api.Plan) *batchv1.Job {
 		},
 	}
 	if !Settings.OpenShift {
-		psc.RunAsNonRoot = ptr.To(true)
+		//		psc.RunAsNonRoot = ptr.To(false)
 		psc.RunAsUser = ptr.To(qemuUser)
 	}
 	return &batchv1.Job{
