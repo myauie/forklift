@@ -58,8 +58,9 @@ ENV HOME=/home/qemu
 # Refer to: https://issues.redhat.com/browse/RHEL-105529
 RUN dnf install -y https://kojihub.stream.centos.org/kojifiles/packages/catatonit/0.2.0/2.el9/x86_64/catatonit-0.2.0-2.el9.x86_64.rpm
 
-ENV LIBGUESTFS_BACKEND=direct
-ENV LIBGUESTFS_BACKEND_SETTINGS=force_tcg
+# This ensures that the 'libvirt:qemu:///session' connection method, which is
+# the officially tested and supported flow, is utilized instead of direct connections.
+ENV LIBGUESTFS_BACKEND=libvirt:qemu:///session
 
 RUN mkdir -p /etc/pki/CA/ && chown qemu:qemu /etc/pki/CA/
 
